@@ -232,14 +232,14 @@ export const parseOOXMLCustomProperties = (xmlContent: string): Record<string, s
             const tag = el.tagName || '';
             const text = el.textContent || '';
 
-            if (/vt:lpwstr|vt:lpstr|vt:bstr/.test(tag)) {
+            if (/vt:(?:lpw?str|bstr)/.test(tag)) {
                 result[name] = text;
             } else if (/vt:bool/.test(tag)) {
                 result[name] = text.toLowerCase() === 'true';
-            } else if (/vt:(i[1248]|ui[1248]|int|uint|r4|r8|decimal)/.test(tag)) {
+            } else if (/vt:(u?i(?:[1248]|nt)|r[48]|decimal)/.test(tag)) {
                 const num = Number(text);
                 if (!isNaN(num)) result[name] = num;
-            } else if (/vt:filetime|vt:date/.test(tag)) {
+            } else if (/vt:(?:filetime|date)/.test(tag)) {
                 const date = new Date(text);
                 if (!isNaN(date.getTime())) result[name] = date;
                 else result[name] = text;
